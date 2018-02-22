@@ -1,5 +1,8 @@
 module.exports = {
   root: true,
+  globals: {
+    SparkMD5: true,
+  },
   parserOptions: {
     ecmaVersion: 2017,
     sourceType: 'module'
