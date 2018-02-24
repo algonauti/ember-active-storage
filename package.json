@@ -1,17 +1,24 @@
 {
   "name": "ember-active-storage",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Power your ember.js application with activestorage",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "activestorage"
   ],
   "license": "MIT",
-  "author": "",
+  "homepage": "https://github.com/algonauti/ember-active-storage",
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/algonauti/ember-active-storage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/algonauti/ember-active-storage/issues"
+  },
   "scripts": {
     "build": "ember build",
     "lint:js": "eslint ./*.js addon addon-test-support app config lib server test-support tests",
