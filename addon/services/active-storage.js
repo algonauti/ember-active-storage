@@ -17,14 +17,14 @@ export default Service.extend({
   _uploadTask: task(function * (blob, url) {
     debug(`ActiveStorage: _uploadTask`)
 
-    yield get(this, '_directUpload').perform(blob, url);
-    yield get(this, '_blobUpload').perform(blob);
+    yield this._directUpload(blob, url);
+    yield this._blobUpload(blob);
   }),
 
-  _directUpload: task(function * (blob, url) {
+  _directUpload(blob, url) {
     debug(`ActiveStorage: _directUpload ${blob} to url ${url}`)
 
-    yield this.get('ajax').request(url, {
+    return this.get('ajax').request(url, {
       method: 'POST',
       data: {
         blob: {
@@ -42,17 +42,17 @@ export default Service.extend({
         directUploadData: response.direct_upload
       });
     });
-  }),
+  },
 
-  _blobUpload: task(function * (blob) {
+  _blobUpload(blob) {
     debug(`ActiveStorage: _blobUpload ${blob}`)
 
-    yield this.get('ajax').request(get(blob, 'directUploadData.url'), {
+    return this.get('ajax').request(get(blob, 'directUploadData.url'), {
       method: 'PUT',
       headers: get(blob, 'directUploadData.headers'),
       processData: false,
       contentType: get(blob, 'type'),
       data: get(blob, 'file')
     })
-  })
+  }
 });
