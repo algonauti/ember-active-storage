@@ -1,7 +1,7 @@
 ember-active-storage
 ==============================================================================
 
-[Short description of the addon.]
+[![Build Status](https://travis-ci.org/algonauti/ember-active-storage.svg?branch=master)](https://travis-ci.org/algonauti/ember-active-storage)
 
 Installation
 ------------------------------------------------------------------------------
