@@ -4,7 +4,6 @@ import { task } from 'ember-concurrency';
 import { run } from '@ember/runloop';
 import { tryInvoke } from '@ember/utils';
 import { get, setProperties } from '@ember/object';
-import { debug, inspect } from '@ember/debug';
 
 var Uploader = EmberObject.extend({
   ajax: inject(),
@@ -14,8 +13,6 @@ var Uploader = EmberObject.extend({
   },
 
   _uploadTask: task(function * (blob, url, resolve, reject) {
-    debug(`ActiveStorage: _uploadTask`)
-
     try {
       yield this._directUpload(blob, url);
       yield this._blobUpload(blob);
@@ -26,8 +23,6 @@ var Uploader = EmberObject.extend({
   }),
 
   _directUpload(blob, url) {
-    debug(`ActiveStorage: _directUpload ${blob} to url ${url}`)
-
     return this.get('ajax').request(url, {
       method: 'POST',
       data: {
@@ -49,8 +44,6 @@ var Uploader = EmberObject.extend({
   },
 
   _blobUpload(blob) {
-    debug(`ActiveStorage: _blobUpload ${blob}`)
-
     return this.get('ajax').request(get(blob, 'directUploadData.url'), {
       method: 'PUT',
       headers: get(blob, 'directUploadData.headers'),
