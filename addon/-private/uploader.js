@@ -9,15 +9,20 @@ import { debug, inspect } from '@ember/debug';
 var Uploader = EmberObject.extend({
   ajax: inject(),
 
-  upload(blob, url) {
-    get(this, '_uploadTask').perform(blob, url);
+  upload(blob, url, resolve, reject) {
+    get(this, '_uploadTask').perform(blob, url, resolve, reject);
   },
 
-  _uploadTask: task(function * (blob, url) {
+  _uploadTask: task(function * (blob, url, resolve, reject) {
     debug(`ActiveStorage: _uploadTask`)
 
-    yield this._directUpload(blob, url);
-    yield this._blobUpload(blob);
+    try {
+      yield this._directUpload(blob, url);
+      yield this._blobUpload(blob);
+      resolve(blob);
+    } catch (error) {
+      reject(error);
+    }
   }),
 
   _directUpload(blob, url) {

@@ -21,6 +21,8 @@ export default Component.extend({
             onProgress(progress) {
               debug("onProgress: " + progress);
             }
+          }).then( (blob) => {
+            debug(`file upload completed ${blob.get('signedId')}`);
           });
         }
       }

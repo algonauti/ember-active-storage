@@ -12,8 +12,10 @@ export default Service.extend({
       getOwner(this).ownerInjection(),
     );
 
-    Blob.build(file).then( (blob) => {
-      uploader.upload(blob, url)
+    return new Promise((resolve, reject) => {
+      Blob.build(file).then( (blob) => {
+        uploader.upload(blob, url, resolve, reject);
+      });
     });
   }
 
