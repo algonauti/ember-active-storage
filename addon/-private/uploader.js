@@ -1,6 +1,8 @@
 import EmberObject from '@ember/object';
 import { inject } from '@ember/service';
 import { task } from 'ember-concurrency';
+import { run } from '@ember/runloop';
+import { tryInvoke } from '@ember/utils';
 import { get, setProperties } from '@ember/object';
 import { debug, inspect } from '@ember/debug';
 
@@ -59,10 +61,9 @@ var Uploader = EmberObject.extend({
   },
 
   _uploadRequestDidProgress(event) {
-    debug("_uploadRequestDidProgress: " + inspect(event));
-    const progress = event.loaded / event.total * 100
+    const progress = Math.ceil(event.loaded / event.total * 100);
     if (progress) {
-      debug("Progress: " + progress);
+      run(() => tryInvoke(this, `onProgress`, [progress]));
     }
   }
 

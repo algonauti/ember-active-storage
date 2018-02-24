@@ -18,8 +18,8 @@ export default Component.extend({
       if (isPresent(files)) {
         for (var i = 0; i < files.length; i++) {
           get(this, 'activeStorage').upload(files.item(i), 'http://localhost:4200/api/attachments/upload', {
-            progress() {
-              debug("progress");
+            onProgress(progress) {
+              debug("onProgress: " + progress);
             }
           });
         }
