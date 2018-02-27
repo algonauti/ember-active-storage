@@ -1,12 +1,12 @@
 import EmberObject from '@ember/object';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { run } from '@ember/runloop';
 import { tryInvoke } from '@ember/utils';
 import { get, setProperties } from '@ember/object';
 
 var Uploader = EmberObject.extend({
-  ajax: inject(),
+  ajax: service(),
 
   upload(blob, url, resolve, reject) {
     get(this, '_uploadTask').perform(blob, url, resolve, reject);
@@ -25,14 +25,15 @@ var Uploader = EmberObject.extend({
   _directUpload(blob, url) {
     return this.get('ajax').request(url, {
       method: 'POST',
-      data: {
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify({
         blob: {
           filename: blob.get('name'),
           content_type: blob.get('type'),
           byte_size: blob.get('size'),
           checksum: blob.get('checksum')
         }
-      }
+      })
     }).then( (response) => {
       setProperties(blob, {
         id: response.id,

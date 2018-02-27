@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { isPresent } from '@ember/utils';
 import { debug } from '@ember/debug';
@@ -9,7 +9,7 @@ import layout from '../templates/components/file-upload';
 export default Component.extend({
   layout,
 
-  activeStorage: inject(),
+  activeStorage: service(),
 
   actions: {
     upload(event) {
