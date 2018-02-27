@@ -1,12 +1,12 @@
 import EmberObject from '@ember/object';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 import { run } from '@ember/runloop';
 import { tryInvoke } from '@ember/utils';
 import { get, setProperties } from '@ember/object';
 
 var Uploader = EmberObject.extend({
-  ajax: inject(),
+  ajax: service(),
 
   upload(blob, url, resolve, reject) {
     get(this, '_uploadTask').perform(blob, url, resolve, reject);
