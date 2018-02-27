@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   globals: {
+    server: true,
     SparkMD5: true,
   },
   parserOptions: {
