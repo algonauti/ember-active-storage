@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+import { Promise as EmberPromise } from 'rsvp';
 
 const fileSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice
 
@@ -12,7 +13,7 @@ export default EmberObject.extend({
   },
 
   createMD5() {
-    return new Promise((resolve, reject) => {
+    return new EmberPromise((resolve, reject) => {
       this.md5Buffer = new SparkMD5.ArrayBuffer;
       this.fileReader = new FileReader;
 

@@ -1,5 +1,7 @@
 import EmberObject from '@ember/object';
 import { computed, get } from '@ember/object';
+import { Promise as EmberPromise } from 'rsvp';
+
 import FileChecksum from 'ember-active-storage/utils/file-checksum';
 
 export default EmberObject.extend({
@@ -21,7 +23,7 @@ export default EmberObject.extend({
 }).reopenClass({
 
   build(file) {
-    return new Promise((resolve, reject) => {
+    return new EmberPromise((resolve, reject) => {
       FileChecksum.MD5(file).then( (checksum) => {
         const blob = this.create({ file: file, checksum: checksum });
         resolve(blob);
