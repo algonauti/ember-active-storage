@@ -9,6 +9,10 @@ export default EmberObject.extend({
 
   file: null,
   checksum: null,
+  id: null,
+  signedId: null,
+  key: null,
+  directUploadData: null,
 
   // Single-line Computed Properties
 
