@@ -10,7 +10,7 @@ module('Unit | Utility | file-checksum', function() {
     assert.ok(fileChecksum);
   });
 
-  test('checksum is generated and encoded correctly', async function(assert) {
+  test('is generated and encoded correctly', async function(assert) {
     const fileChecksum = FileChecksum.create({ file: file });
     const checksum = await fileChecksum.createMD5();
     const base64Pattern = RegExp("^[a-zA-Z0-9+/]*={0,2}$");
