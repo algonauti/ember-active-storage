@@ -6,9 +6,14 @@ import fetchFile from 'dummy/tests/helpers/fetch-file';
 module('Unit | Service | active-storage', function(hooks) {
   setupTest(hooks);
 
+  let service, file;
+
+  hooks.beforeEach(async function() {
+    service = this.owner.lookup('service:active-storage');
+    file = await fetchFile('/sample.pdf');
+  });
+
   test('upload() returns blob model', async function(assert) {
-    let service = this.owner.lookup('service:active-storage');
-    let file = await fetchFile('/sample.pdf');
     let blob = await service.upload(file, '/api/attachments/upload');
     assert.equal(get(blob, 'name'), 'sample.pdf');
     assert.equal(get(blob, 'type'), 'application/pdf');
@@ -21,8 +26,6 @@ module('Unit | Service | active-storage', function(hooks) {
   });
 
   test('upload() invokes onProgress callback', async function(assert) {
-    let service = this.owner.lookup('service:active-storage');
-    let file = await fetchFile('/sample.pdf');
     let n = 0;
     await service.upload(file, '/api/attachments/upload', {
       onProgress(progress) {
