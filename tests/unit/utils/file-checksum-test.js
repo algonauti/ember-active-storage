@@ -14,6 +14,8 @@ module('Unit | Utility | file-checksum', function() {
     const fileChecksum = FileChecksum.create({ file: file });
     const checksum = await fileChecksum.createMD5();
     const decodedChecksum = atob(checksum);
+    assert.equal(checksum.length, 24);
+    assert.equal(checksum, 'rL0Y20zC+Fzt72VPzMSk2A==');
     assert.equal(typeof(decodedChecksum), 'string');
     assert.equal(decodedChecksum.indexOf("\uFFFD"), -1);
     assert.equal(decodedChecksum.length, 16);
