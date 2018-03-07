@@ -12,17 +12,14 @@ module('Unit | Model | blob', function(hooks) {
   const fileChecksum = FileChecksum.create({ file: file });
 
   test('is generated correctly', async function (assert) {
-
     const checksum = await fileChecksum.createMD5();
     const blob = await Blob.build(file);
-    assert.ok(blob.checksum === checksum);
-    assert.ok(blob.file === file);
-    assert.ok(get(blob, 'name') === 'foo.txt');
-    assert.ok(get(blob, 'type') === 'text/plain');
-    assert.ok(get(blob, 'size') === 3);
-
+    assert.equal(blob.checksum, checksum);
+    assert.equal(blob.file, file);
+    assert.equal(get(blob, 'name'), 'foo.txt');
+    assert.equal(get(blob, 'type'), 'text/plain');
+    assert.equal(get(blob, 'size'), 3);
     const blobToString = blob.toString();
-    assert.ok(blobToString === `Blob: foo.txt with checksum rL0Y20zC+Fzt72VPzMSk2A==`)
-
+    assert.equal(blobToString, 'Blob: foo.txt with checksum rL0Y20zC+Fzt72VPzMSk2A==');
   });
 });
