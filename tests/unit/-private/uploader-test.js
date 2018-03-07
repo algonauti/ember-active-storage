@@ -33,25 +33,13 @@ module('Unit | -Private | uploader', function(hooks) {
 
   });
 
-  test('blob upload put request body has correct attributes', async function(assert) {
-
-    server.put('/attachments/direct-upload', function(db, request)  {
-      const expectedAttributes = get(blob, 'file');
-      const attributes = request.requestBody;
-      assert.deepEqual(attributes, expectedAttributes);
-    });
-
-    const blob = await Blob.build(file);
-    await uploader._directUpload(blob, '/api/attachments/upload');
-    await uploader._blobUpload(blob);
-
-  })
 
   test('direct upload post request body has correct attributes', async function(assert) {
 
+    let attributes, expectedAttributes;
     server.post('/attachments/upload', function(db, request)  {
-      const attributes = JSON.parse(request.requestBody);
-      const expectedAttributes = {
+      attributes = JSON.parse(request.requestBody);
+      expectedAttributes = {
         "blob": {
           "byte_size": 3,
           "checksum": "rL0Y20zC+Fzt72VPzMSk2A==",
@@ -60,15 +48,27 @@ module('Unit | -Private | uploader', function(hooks) {
         }
       };
 
-      assert.deepEqual(attributes, expectedAttributes);
-
     });
 
     const blob = await Blob.build(file);
     await uploader._directUpload(blob, '/api/attachments/upload');
+    assert.deepEqual(attributes, expectedAttributes);
 
   });
 
+  test('blob upload put request body has correct attributes', async function(assert) {
+
+    let attributes, expectedAttributes;
+    server.put('/attachments/direct-upload', function(db, request)  {
+      attributes = request.requestBody;
+      expectedAttributes = get(blob, 'file');
+    });
+
+    await uploader._directUpload(blob, '/api/attachments/upload');
+    await uploader._blobUpload(blob);
+    assert.deepEqual(attributes, expectedAttributes);
+
+  })
 
 
 });
