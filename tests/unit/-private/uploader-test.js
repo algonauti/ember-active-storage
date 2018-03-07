@@ -1,26 +1,25 @@
-/* global server */
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { get } from '@ember/object';
 import Blob from 'ember-active-storage/model/blob';
 import Uploader from 'ember-active-storage/-private/uploader';
-import { get } from '@ember/object';
 
 module('Unit | -Private | uploader', function(hooks) {
 
   setupTest(hooks);
 
-  let file, uploader;
+  let file, uploader, blob;
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(async function() {
 
     file = new File(['foo'], "foo.txt", { type: "text/plain" });
     uploader = Uploader.create(this.owner.ownerInjection());
+    blob = await Blob.build(file);
 
-  })
+  });
 
   test('blob properties set with server response', async function(assert) {
 
-    const blob = await Blob.build(file);
     const directUploadData = {
       url: '/api/attachments/direct-upload',
       headers: { 'Content-Type': 'text/plain' }
@@ -50,7 +49,6 @@ module('Unit | -Private | uploader', function(hooks) {
 
     });
 
-    const blob = await Blob.build(file);
     await uploader._directUpload(blob, '/api/attachments/upload');
     assert.deepEqual(attributes, expectedAttributes);
 
