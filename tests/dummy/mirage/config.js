@@ -30,5 +30,5 @@ export default function() {
 
   this.put('/attachments/direct-upload', () => {
     return new Response(204);
-  });
+  }, { timing: 150 });
 }
