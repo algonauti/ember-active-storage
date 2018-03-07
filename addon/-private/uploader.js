@@ -1,6 +1,5 @@
 import EmberObject from '@ember/object';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
 import { run } from '@ember/runloop';
 import { tryInvoke } from '@ember/utils';
 import { get, setProperties } from '@ember/object';
@@ -9,18 +8,21 @@ var Uploader = EmberObject.extend({
   ajax: service(),
 
   upload(blob, url, resolve, reject) {
-    get(this, '_uploadTask').perform(blob, url, resolve, reject);
+    this._uploadTask(blob, url)
+      .then( blob => resolve(blob))
+      .catch( error => reject(error));
   },
 
-  _uploadTask: task(function * (blob, url, resolve, reject) {
+  async _uploadTask(blob, url) {
     try {
-      yield this._directUpload(blob, url);
-      yield this._blobUpload(blob);
-      resolve(blob);
+      const response = await this._directUpload(blob, url);
+      this._blobUpdate(blob, response);
+      await this._blobUpload(blob);
+      return blob;
     } catch (error) {
-      reject(error);
+      throw error;
     }
-  }),
+  },
 
   _directUpload(blob, url) {
     return this.get('ajax').request(url, {
@@ -34,13 +36,15 @@ var Uploader = EmberObject.extend({
           checksum: blob.get('checksum')
         }
       })
-    }).then( (response) => {
-      setProperties(blob, {
-        id: response.id,
-        signedId: response.signed_id,
-        key: response.key,
-        directUploadData: response.direct_upload
-      });
+    });
+  },
+
+  _blobUpdate(blob, response) {
+    setProperties(blob, {
+      id: response.id,
+      signedId: response.signed_id,
+      key: response.key,
+      directUploadData: response.direct_upload
     });
   },
 
