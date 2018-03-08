@@ -1,10 +1,12 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { get } from '@ember/object';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import fetchFile from 'dummy/tests/helpers/fetch-file';
 
 module('Unit | Service | active-storage', function(hooks) {
   setupTest(hooks);
+  setupMirage(hooks);
 
   let service, file;
 
