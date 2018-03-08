@@ -1,12 +1,14 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { get } from '@ember/object';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import Blob from 'ember-active-storage/model/blob';
 import Uploader from 'ember-active-storage/-private/uploader';
 
 module('Unit | -Private | uploader', function(hooks) {
 
   setupTest(hooks);
+  setupMirage(hooks);
 
   let file, uploader, blob;
 
