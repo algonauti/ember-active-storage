@@ -25,15 +25,15 @@ var Uploader = EmberObject.extend({
   },
 
   _directUpload(blob, url) {
-    return this.get('ajax').request(url, {
+    return get(this, 'ajax').request(url, {
       method: 'POST',
       contentType: 'application/json; charset=utf-8',
       data: JSON.stringify({
         blob: {
-          filename: blob.get('name'),
-          content_type: blob.get('type'),
-          byte_size: blob.get('size'),
-          checksum: blob.get('checksum')
+          filename: get(blob, 'name'),
+          content_type: get(blob, 'type'),
+          byte_size: get(blob, 'size'),
+          checksum: get(blob, 'checksum')
         }
       })
     });
@@ -49,7 +49,7 @@ var Uploader = EmberObject.extend({
   },
 
   _blobUpload(blob) {
-    return this.get('ajax').request(get(blob, 'directUploadData.url'), {
+    return get(this, 'ajax').request(get(blob, 'directUploadData.url'), {
       method: 'PUT',
       headers: get(blob, 'directUploadData.headers'),
       processData: false,
