@@ -27,6 +27,7 @@ var Uploader = EmberObject.extend({
   _directUpload(blob, url) {
     return get(this, 'ajax').request(url, {
       method: 'POST',
+      headers: get(this, 'headers'),
       contentType: 'application/json; charset=utf-8',
       data: JSON.stringify({
         blob: {
