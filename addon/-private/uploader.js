@@ -54,6 +54,7 @@ var Uploader = EmberObject.extend({
       method: 'PUT',
       headers: get(blob, 'directUploadData.headers'),
       processData: false,
+      dataType: 'text',
       contentType: get(blob, 'type'),
       data: get(blob, 'file'),
       xhr: () => {
