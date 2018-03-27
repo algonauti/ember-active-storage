@@ -55,8 +55,8 @@ var Uploader = EmberObject.extend({
       headers: get(blob, 'directUploadData.headers'),
       processData: false,
       dataType: 'text',
-      contentType: get(blob, 'type'),
-      data: get(blob, 'file'),
+      contentType: false,
+      data: blob.slice(),
       xhr: () => {
         var xhr = new window.XMLHttpRequest();
         xhr.upload.addEventListener('progress', (event) => this._uploadRequestDidProgress(event));
