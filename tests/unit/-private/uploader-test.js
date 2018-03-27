@@ -65,7 +65,7 @@ module('Unit | -Private | uploader', function(hooks) {
 
 
   test('_blobUpload() sets correct attributes into PUT request body', async function(assert) {
-    let expectedAttributes = get(blob, 'file');
+    let expectedAttributes = blob.slice();
     let attributes;
     this.server.put('/attachments/direct-upload', function(db, request)  {
       attributes = request.requestBody;

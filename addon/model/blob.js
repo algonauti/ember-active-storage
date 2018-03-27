@@ -22,6 +22,10 @@ export default EmberObject.extend({
 
   toString() {
     return `Blob: ${get(this, 'name')} with checksum ${get(this, 'checksum')}`
+  },
+
+  slice() {
+    return get(this, 'file').slice();
   }
 
 }).reopenClass({
