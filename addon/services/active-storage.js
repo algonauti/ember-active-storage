@@ -9,7 +9,7 @@ import Blob from 'ember-active-storage/model/blob';
 
 export default Service.extend({
 
-  upload(file, url, mixin) {
+  upload(file, url, mixin = {}) {
     const uploader = Uploader.extend(Mixin.create(mixin)).create(
       getOwner(this).ownerInjection(), {
         headers: get(this, 'headers')
