@@ -32,6 +32,7 @@
     "spark-md5": "^3.0.0"
   },
   "devDependencies": {
+    "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "^0.6.3",
     "broccoli-asset-rev": "^2.7.0",
     "ember-ajax": "^3.1.0",
