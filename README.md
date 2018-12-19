@@ -70,29 +70,41 @@ export default Component.extend({
 
 It's pretty common that you want to protect with authentication the direct uploads endpoint on your Rails backend. If that's the case, the `activeStorage` service will need to send authentication headers together with the direct upload request.
 
-To achieve that, you'll need to extend the `activeStorage` service provided by the addon and add a `headers` computed property. For example, if you're using [ember-simple-auth](/simplabs/ember-simple-auth) it would look like:
+To achieve that, you'll need to extend the `activeStorage` service provided by the addon and add a `headers` computed property. For example, if you're using [ember-simple-auth](/simplabs/ember-simple-auth), it will be a 2-steps process. First you'll need to define an `authenticatedHeaders` computed property in your `session` service, like this:
+
+```javascript
+// app/services/session.js
+import SessionService from 'ember-simple-auth/services/session';
+import { computed, get } from '@ember/object';
+
+export default SessionService.extend({
+
+  authenticatedHeaders: computed('isAuthenticated', function() {
+    const { access_token } = get(this, 'session.authenticated');
+    return { Authorization: `Bearer ${access_token}` };
+  })
+
+});
+```
+
+Then, you will alias that property in your `activeStorage` service, like this:
 
 ```javascript
 // app/services/active-storage.js
 import ActiveStorage from 'ember-active-storage/services/active-storage';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
-import { get } from '@ember/object';
+import { alias } from '@ember/object/computed';
 
 export default ActiveStorage.extend({
 
   session: service(),
 
-  headers: computed('session.isAuthenticated', function() {
-    var headers = {};
-    get(this, 'session').authorize('authorizer:application', (headerName, headerValue) => {
-      headers[headerName] = headerValue;
-    });
-    return headers;
-  })
+  headers: alias('session.authenticatedHeaders')
 
 });
 ```
+
+Also note: if the download endpoint is protected as well, and you're using an ajax request to download files, then don't forget to include the same headers in that request as well.
 
 
 Contributing
