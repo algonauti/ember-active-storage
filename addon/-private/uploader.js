@@ -1,11 +1,11 @@
 import EmberObject from '@ember/object';
-import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
 import { tryInvoke } from '@ember/utils';
 import { get, setProperties } from '@ember/object';
 
+import request from 'ember-active-storage/-private/request';
+
 var Uploader = EmberObject.extend({
-  ajax: service(),
 
   upload(blob, url, resolve, reject) {
     this._uploadTask(blob, url)
@@ -25,7 +25,7 @@ var Uploader = EmberObject.extend({
   },
 
   _directUpload(blob, url) {
-    return get(this, 'ajax').request(url, {
+    return request(url, {
       method: 'POST',
       headers: get(this, 'headers'),
       contentType: 'application/json; charset=utf-8',
@@ -50,15 +50,13 @@ var Uploader = EmberObject.extend({
   },
 
   _blobUpload(blob) {
-    return get(this, 'ajax').request(get(blob, 'directUploadData.url'), {
+    return request(get(blob, 'directUploadData.url'), {
       method: 'PUT',
       headers: get(blob, 'directUploadData.headers'),
-      processData: false,
       dataType: 'text',
-      contentType: false,
       data: blob.slice(),
       xhr: () => {
-        var xhr = new window.XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         xhr.upload.addEventListener('progress', (event) => this._uploadRequestDidProgress(event));
         return xhr;
       },
