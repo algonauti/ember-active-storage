@@ -1,8 +1,6 @@
 import EmberObject from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
 
-const fileSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice
-
 export default EmberObject.extend({
   init() {
     this._super(...arguments);
@@ -36,6 +34,8 @@ export default EmberObject.extend({
   },
 
   readNextChunk() {
+    let fileSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice
+
     if (this.chunkIndex < this.chunkCount) {
       const start = this.chunkIndex * this.chunkSize;
       const end = Math.min(start + this.chunkSize, this.file.size);
