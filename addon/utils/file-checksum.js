@@ -5,9 +5,10 @@ export default EmberObject.extend({
   init() {
     this._super(...arguments);
 
-    this.chunkSize = 2097152; // 2MB
+    this.chunkSize  = 2097152; // 2MB
     this.chunkCount = Math.ceil(this.file.size / this.chunkSize);
     this.chunkIndex = 0;
+    this.fileSlice  = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
   },
 
   createMD5() {
@@ -34,12 +35,10 @@ export default EmberObject.extend({
   },
 
   readNextChunk() {
-    let fileSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice
-
     if (this.chunkIndex < this.chunkCount) {
       const start = this.chunkIndex * this.chunkSize;
       const end = Math.min(start + this.chunkSize, this.file.size);
-      const bytes = fileSlice.call(this.file, start, end);
+      const bytes = this.fileSlice.call(this.file, start, end);
       this.fileReader.readAsArrayBuffer(bytes);
       this.chunkIndex++;
       return true;
