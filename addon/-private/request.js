@@ -1,14 +1,14 @@
 import { isPresent } from '@ember/utils';
 import { Promise } from 'rsvp';
 
-export default function(url, options) {
+export default function (url, options) {
   return new Promise((resolve, reject) => {
     let xhr = options.xhr ? options.xhr() : new XMLHttpRequest();
 
     xhr.open(options.method || 'GET', url);
 
     if (options.headers) {
-      Object.keys(options.headers).forEach(key => {
+      Object.keys(options.headers).forEach((key) => {
         xhr.setRequestHeader(key, options.headers[key]);
       });
     }

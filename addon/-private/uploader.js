@@ -1,77 +1,89 @@
-import EmberObject from '@ember/object';
-import { run } from '@ember/runloop';
-import { tryInvoke } from '@ember/utils';
-import { get, setProperties } from '@ember/object';
-
+import { capitalize } from '@ember/string';
 import request from 'ember-active-storage/-private/request';
+import { run } from '@ember/runloop';
+import { setProperties } from '@ember/object';
 
-var Uploader = EmberObject.extend({
+export default class Uploader {
+  constructor({ headers, ...events }) {
+    this.headers = headers;
+    this.events = events;
+  }
 
   upload(blob, url, resolve, reject) {
     this._uploadTask(blob, url)
-      .then( blob => resolve(blob))
-      .catch( error => reject(error));
-  },
+      .then((blob) => resolve(blob))
+      .catch((error) => reject(error));
+  }
 
   async _uploadTask(blob, url) {
-    try {
-      const response = await this._directUpload(blob, url);
-      this._blobUpdate(blob, response);
-      await this._blobUpload(blob);
-      return blob;
-    } catch (error) {
-      throw error;
-    }
-  },
+    const response = await this._directUpload(blob, url);
+    this._blobUpdate(blob, response);
+    await this._blobUpload(blob);
+
+    return blob;
+  }
 
   _directUpload(blob, url) {
     return request(url, {
       method: 'POST',
-      headers: get(this, 'headers'),
+      headers: this.headers,
       contentType: 'application/json; charset=utf-8',
       data: JSON.stringify({
         blob: {
-          filename: get(blob, 'name'),
-          content_type: get(blob, 'type'),
-          byte_size: get(blob, 'size'),
-          checksum: get(blob, 'checksum')
-        }
-      })
+          filename: blob.name,
+          content_type: blob.type,
+          byte_size: blob.size,
+          checksum: blob.checksum,
+        },
+      }),
     });
-  },
+  }
 
   _blobUpdate(blob, response) {
     setProperties(blob, {
       id: response.id,
       signedId: response.signed_id,
       key: response.key,
-      directUploadData: response.direct_upload
+      directUploadData: response.direct_upload,
     });
-  },
+  }
 
   _blobUpload(blob) {
-    return request(get(blob, 'directUploadData.url'), {
+    return request(blob.directUploadData.url, {
       method: 'PUT',
-      headers: get(blob, 'directUploadData.headers'),
+      headers: blob.directUploadData.headers,
       dataType: 'text',
       data: blob.slice(),
       xhr: () => {
         var xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener('progress', (event) => this._uploadRequestDidProgress(event));
+        this._addListeners(xhr);
+        xhr.upload.addEventListener('progress', (event) => {
+          this._uploadRequestDidProgress(event);
+        });
         return xhr;
       },
     });
-  },
+  }
+
+  _addListeners(xhr) {
+    ['loadstart', 'load', 'loadend', 'error', 'abort', 'timeout'].forEach(
+      (name) => {
+        xhr.addEventListener(name, (event) => {
+          this._handleEvent(event);
+        });
+      }
+    );
+  }
 
   _uploadRequestDidProgress(event) {
-    const progress = Math.ceil(event.loaded / event.total * 100);
+    const progress = Math.ceil((event.loaded / event.total) * 100);
+
     if (progress) {
-      run(() => tryInvoke(this, `onProgress`, [progress]));
+      run(() => this.events.onProgress?.(progress));
     }
   }
 
-});
-
-Uploader.toString = () => 'Uploader';
-
-export default Uploader;
+  _handleEvent(e) {
+    this.events[`on${capitalize(e.type)}`]?.(e);
+  }
+}
