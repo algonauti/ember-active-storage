@@ -4871,6 +4871,24 @@
     "walk-sync" "^0.3.3"
     "webpack" "^4.43.0"
 
+"ember-cache-primitive-polyfill@^1.0.1":
+  "integrity" "sha512-hSPcvIKarA8wad2/b6jDd/eU+OtKmi6uP+iYQbzi5TQpjsqV6b4QdRqrLk7ClSRRKBAtdTuutx+m+X+WlEd2lw=="
+  "resolved" "https://registry.npmjs.org/ember-cache-primitive-polyfill/-/ember-cache-primitive-polyfill-1.0.1.tgz"
+  "version" "1.0.1"
+  dependencies:
+    "ember-cli-babel" "^7.22.1"
+    "ember-cli-version-checker" "^5.1.1"
+    "ember-compatibility-helpers" "^1.2.1"
+    "silent-error" "^1.1.1"
+
+"ember-cached-decorator-polyfill@^0.1.0":
+  "integrity" "sha512-mMdzPQuR4D6hNXkdVFfIWTQbBERNFpm5G36sC4DzogQYDcFKQf5QXLVCmK+3KsEKjJOwPeXmClMQTNUfgtb5Ig=="
+  "resolved" "https://registry.npmjs.org/ember-cached-decorator-polyfill/-/ember-cached-decorator-polyfill-0.1.1.tgz"
+  "version" "0.1.1"
+  dependencies:
+    "ember-cache-primitive-polyfill" "^1.0.1"
+    "ember-cli-babel" "^7.21.0"
+
 "ember-cli-babel-plugin-helpers@^1.0.0", "ember-cli-babel-plugin-helpers@^1.1.1":
   "integrity" "sha512-sKvOiPNHr5F/60NLd7SFzMpYPte/nnGkq/tMIfXejfKHIhaiIkYFqX8Z9UFTKWLLn+V7NOaby6niNPZUdvKCRw=="
   "resolved" "https://registry.npmjs.org/ember-cli-babel-plugin-helpers/-/ember-cli-babel-plugin-helpers-1.1.1.tgz"

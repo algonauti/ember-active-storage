@@ -5,9 +5,11 @@ import { Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
 import Uploader from 'ember-active-storage/-private/uploader';
 import { assert } from '@ember/debug';
+import { cached } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 
 export default class ActiveStorageService extends Service {
+  @cached
   get _config() {
     const config =
       getOwner(this).resolveRegistration('config:environment') || {};
