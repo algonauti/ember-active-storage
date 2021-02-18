@@ -9,7 +9,8 @@
           "name": "addon",
           "outputRepo": "https://github.com/ember-cli/ember-addon-output",
           "codemodsSource": "ember-addon-codemods-manifest@1",
-          "isBaseBlueprint": true
+          "isBaseBlueprint": true,
+          "options": ["--yarn"]
         }
       ]
     }
