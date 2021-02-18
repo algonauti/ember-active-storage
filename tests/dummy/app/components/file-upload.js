@@ -16,7 +16,7 @@ export default class FileUploadComponent extends Component {
       for (var i = 0; i < files.length; i++) {
         this.activeStorage
           .upload(files.item(i), '/api/attachments/upload', {
-            onProgress(progress) {
+            onProgress: (progress) => {
               debug('onProgress: ' + progress);
             },
           })
