@@ -21,7 +21,7 @@ export default class FileUploadComponent extends Component {
             },
           })
           .then((blob) => {
-            debug(`file upload completed ${blob.get('signedId')}`);
+            debug(`file upload completed ${blob.signedId}`);
           });
       }
     }
