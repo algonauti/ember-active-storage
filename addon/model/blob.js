@@ -1,44 +1,53 @@
-import EmberObject from '@ember/object';
-import { computed, get } from '@ember/object';
 import { Promise as EmberPromise } from 'rsvp';
-
 import FileChecksum from 'ember-active-storage/utils/file-checksum';
+import { tracked } from '@glimmer/tracking';
 
-export default EmberObject.extend({
+export default class Blob {
   // Default Values
+  @tracked file = null;
+  checksum = null;
+  id = null;
+  signedId = null;
+  key = null;
+  directUploadData = null;
 
-  file: null,
-  checksum: null,
-  id: null,
-  signedId: null,
-  key: null,
-  directUploadData: null,
+  constructor(file, checksum) {
+    this.file = file;
+    this.checksum = checksum;
+  }
 
-  // Single-line Computed Properties
+  // Getters
+  get name() {
+    return this.file.name;
+  }
 
-  name: computed.alias('file.name'),
-  type: computed.alias('file.type'),
-  size: computed.alias('file.size'),
+  get type() {
+    return this.file.type;
+  }
+
+  get size() {
+    return this.file.size;
+  }
 
   toString() {
-    return `Blob: ${get(this, 'name')} with checksum ${get(this, 'checksum')}`
-  },
+    return `Blob: ${this.name} with checksum ${this.checksum}`;
+  }
 
   slice() {
-    return get(this, 'file').slice();
+    return this.file.slice();
   }
 
-}).reopenClass({
-
-  build(file) {
+  static build(file) {
     return new EmberPromise((resolve, reject) => {
-      FileChecksum.MD5(file).then( (checksum) => {
-        const blob = this.create({ file: file, checksum: checksum });
-        resolve(blob);
-      }, (error) => {
-        reject(error)
-      });
+      FileChecksum.MD5(file).then(
+        (checksum) => {
+          const blob = new Blob(file, checksum);
+          resolve(blob);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
     });
   }
-
-});
+}

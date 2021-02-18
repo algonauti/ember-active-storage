@@ -1,19 +1,14 @@
-ember-active-storage
-==============================================================================
+# ember-active-storage
 
 [![Build Status](https://travis-ci.org/algonauti/ember-active-storage.svg?branch=master)](https://travis-ci.org/algonauti/ember-active-storage)
 
-
-Installation
-------------------------------------------------------------------------------
+## Installation
 
 ```
 ember install ember-active-storage
 ```
 
-
-Usage
-------------------------------------------------------------------------------
+## Usage
 
 The addon provides an `activeStorage` service that allows you to:
 
@@ -23,48 +18,51 @@ The addon provides an `activeStorage` service that allows you to:
 Assuming your template has a file input like:
 
 ```hbs
-<input type="file" onchange={{action "upload"}} />
+<input type="file" {{on "change" (fn this.upload)}} />
 ```
 
 and your ember model has an `avatar` attribute defined as `has_one_attached :avatar` on its corresponding Active Record model, then in your component (or controller) the `upload` action would look like:
 
 ```javascript
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-import { get, set } from '@ember/object';
 
-export default Component.extend({
-  activeStorage: service(),
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
 
-  uploadProgress: 0,
+  @tracked
+  uploadProgress = 0;
 
-  actions: {
-    upload(event) {
-      const files = event.target.files;
-      if (files) {
-        const directUploadURL = '/rails/active_storage/direct_uploads';
-        for (var i = 0; i < files.length; i++) {
-          get(this, 'activeStorage').upload(files.item(i), directUploadURL, {
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
             onProgress: (progress) => {
-              set(this, 'uploadProgress', progress);
-            }
-          }).then( (blob) => {
-            const signedId = get(blob, 'signedId');
-            let model = get(this, 'model');
-            set(model, 'avatar', signedId);
+              this.uploadProgress = progress;
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
           });
-        }
       }
     }
   }
-});
-
+}
 ```
 
 - `directUploadURL` is the path referencing `ActiveStorage::DirectUploadsController` on your Rails backend (or a custom one built on top of that).
 - The `uploadProgress` property will hold a value between 0 and 100 that you might use in your template to show upload progress.
 - After the `upload` promise is resolved and `signedId` is set in your model, when a `model.save()` is triggered, the Rails backend will use such `signedId` to associate an `ActiveStorage::Attachment` record to your backend model's record.
-
 
 ### Sending authentication headers
 
@@ -74,17 +72,19 @@ To achieve that, you'll need to extend the `activeStorage` service provided by t
 
 ```javascript
 // app/services/session.js
-import SessionService from 'ember-simple-auth/services/session';
-import { computed, get } from '@ember/object';
+import Service from '@ember/service';
+import { inject as service } from '@ember/service';
 
-export default SessionService.extend({
+export default class MySessionService extends Service {
+  @service
+  session;
 
-  authenticatedHeaders: computed('isAuthenticated', function() {
-    const { access_token } = get(this, 'session.authenticated');
+  get authenticatedHeaders() {
+    const { access_token } = this.session.authenticated;
+
     return { Authorization: `Bearer ${access_token}` };
-  })
-
-});
+  }
+}
 ```
 
 Then, you will alias that property in your `activeStorage` service, like this:
@@ -93,48 +93,45 @@ Then, you will alias that property in your `activeStorage` service, like this:
 // app/services/active-storage.js
 import ActiveStorage from 'ember-active-storage/services/active-storage';
 import { inject as service } from '@ember/service';
-import { alias } from '@ember/object/computed';
 
-export default ActiveStorage.extend({
+export default class ActiveStorageService extends ActiveStorage {
+  @service('my-session')
+  session;
 
-  session: service(),
-
-  headers: alias('session.authenticatedHeaders')
-
-});
+  get headers() {
+    this.session.authenticatedHeaders;
+  }
+}
 ```
 
 Also note: if the download endpoint is protected as well, and you're using an ajax request to download files, then don't forget to include the same headers in that request as well.
 
-
-Contributing
-------------------------------------------------------------------------------
+## Contributing
 
 ### Installation
 
-* `git clone <repository-url>`
-* `cd ember-active-storage`
-* `yarn install`
+- `git clone <repository-url>`
+- `cd ember-active-storage`
+- `yarn install`
 
 ### Linting
 
-* `yarn lint:js`
-* `yarn lint:js --fix`
+- `yarn lint:js`
+- `yarn lint:js --fix`
 
 ### Running tests
 
-* `ember test` – Runs the test suite on the current Ember version
-* `ember test --server` – Runs the test suite in "watch mode"
-* `yarn test` – Runs `ember try:each` to test your addon against multiple Ember versions
+- `ember test` – Runs the test suite on the current Ember version
+- `ember test --server` – Runs the test suite in "watch mode"
+- `yarn test` – Runs `ember try:each` to test your addon against multiple Ember versions
 
 ### Running the dummy application
 
-* `ember serve`
-* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
+- `ember serve`
+- Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
-License
-------------------------------------------------------------------------------
+## License
 
 This project is licensed under the [MIT License](LICENSE.md).
