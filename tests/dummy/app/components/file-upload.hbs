@@ -2,5 +2,20 @@
   multiple="false"
   accept="image/png,image/jpeg,application/pdf"
   type="file"
-  {{on 'change' (fn this.upload)}}
+  id="file"
+  {{on "change" (fn this.setFileNameAndUpload)}}
 />
+
+<label for="file">Choose files</label>
+
+<div class="progress-bar-wrapper">
+	<div class="progress-bar">
+		<span class="progress-bar-fill"></span>
+	</div>
+</div>
+
+<span
+  class="filename"
+>
+  {{this.fileName}}
+</span>
