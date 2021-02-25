@@ -2,28 +2,44 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { debug } from '@ember/debug';
 import { isPresent } from '@ember/utils';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
 export default class FileUploadComponent extends Component {
   @service
   activeStorage;
 
+  @tracked fileName = 'No files chosen';
+
   @action
-  upload(event) {
-    const files = event.target.files;
+  setFileNameAndUpload(e) {
+    this.setFileName(e);
+    this.upload(e);
+  }
+
+  @action
+  upload(e) {
+    const files = e.target.files;
+    const progressBarFill = document.querySelector('.progress-bar-fill');
+    progressBarFill.style = `width: 0%`;
 
     if (isPresent(files)) {
-      for (var i = 0; i < files.length; i++) {
-        this.activeStorage
-          .upload(files.item(i), '/api/attachments/upload', {
-            onProgress: (progress) => {
-              debug('onProgress: ' + progress);
-            },
-          })
-          .then((blob) => {
-            debug(`file upload completed ${blob.signedId}`);
-          });
-      }
+      this.activeStorage
+        .upload(files[0], '/api/attachments/upload', {
+          onProgress: (progress) => {
+            progressBarFill.style = `width: ${progress}%`;
+          },
+        })
+        .then((blob) => {
+          progressBarFill.style = `width: 100%`;
+          debug(`file upload completed ${blob.signedId}`);
+        });
     }
+  }
+
+  @action
+  setFileName(e) {
+    const fileName = e.target.value.split('\\').pop();
+    if (fileName) this.fileName = fileName;
   }
 }
