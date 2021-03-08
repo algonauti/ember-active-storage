@@ -3,7 +3,7 @@
   accept="image/png,image/jpeg,application/pdf"
   type="file"
   id="file"
-  {{on "change" (fn this.setFileNameAndUpload)}}
+  {{on "change" this.setFileNameAndUpload}}
 />
 
 <label for="file">Choose files</label>
