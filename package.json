@@ -1,6 +1,6 @@
 {
   "name": "@algonauti/ember-active-storage",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Power your ember.js application with activestorage",
   "keywords": [
     "ember-addon",
