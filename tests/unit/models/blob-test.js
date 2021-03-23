@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 
-import Blob from 'ember-active-storage/model/blob';
-import FileChecksum from 'ember-active-storage/utils/file-checksum';
+import Blob from '@algonauti/ember-active-storage/model/blob';
+import FileChecksum from '@algonauti/ember-active-storage/utils/file-checksum';
 import { setupTest } from 'ember-qunit';
 
 module('Unit | Model | blob', function (hooks) {

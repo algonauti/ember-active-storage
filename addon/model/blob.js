@@ -1,5 +1,5 @@
 import { Promise as EmberPromise } from 'rsvp';
-import FileChecksum from 'ember-active-storage/utils/file-checksum';
+import FileChecksum from '@algonauti/ember-active-storage/utils/file-checksum';
 import { tracked } from '@glimmer/tracking';
 
 export default class Blob {

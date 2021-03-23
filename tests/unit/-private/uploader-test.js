@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 
-import Blob from 'ember-active-storage/model/blob';
-import Uploader from 'ember-active-storage/-private/uploader';
+import Blob from '@algonauti/ember-active-storage/model/blob';
+import Uploader from '@algonauti/ember-active-storage/-private/uploader';
 import { set } from '@ember/object';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupTest } from 'ember-qunit';
