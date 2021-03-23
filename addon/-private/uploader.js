@@ -1,5 +1,5 @@
 import { capitalize } from '@ember/string';
-import request from 'ember-active-storage/-private/request';
+import request from '@algonauti/ember-active-storage/-private/request';
 import { run } from '@ember/runloop';
 import { setProperties } from '@ember/object';
 

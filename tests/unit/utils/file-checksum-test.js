@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 
-import FileChecksum from 'ember-active-storage/utils/file-checksum';
+import FileChecksum from '@algonauti/ember-active-storage/utils/file-checksum';
 
 module('Unit | Utility | file-checksum', function () {
   const file = new File(['foo'], 'foo.txt', { type: 'text/plain' });

@@ -1,5 +1,5 @@
 import Response from 'ember-cli-mirage/response';
-import { uploadResponse } from 'ember-active-storage/utils/tests';
+import { uploadResponse } from '@algonauti/ember-active-storage/utils/tests';
 
 export default function () {
   this.namespace = '/api';

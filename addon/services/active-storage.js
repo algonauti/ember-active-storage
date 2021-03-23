@@ -1,9 +1,9 @@
 import { isPresent, typeOf } from '@ember/utils';
 
-import Blob from 'ember-active-storage/model/blob';
+import Blob from '@algonauti/ember-active-storage/model/blob';
 import { Promise as EmberPromise } from 'rsvp';
 import Service from '@ember/service';
-import Uploader from 'ember-active-storage/-private/uploader';
+import Uploader from '@algonauti/ember-active-storage/-private/uploader';
 import { assert } from '@ember/debug';
 import { cached } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
