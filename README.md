@@ -5,7 +5,7 @@
 ## Installation
 
 ```
-ember install ember-active-storage
+ember install @algonauti/ember-active-storage
 ```
 
 ## Usage
