@@ -91,7 +91,7 @@ Then, you will alias that property in your `activeStorage` service, like this:
 
 ```javascript
 // app/services/active-storage.js
-import ActiveStorage from 'ember-active-storage/services/active-storage';
+import ActiveStorage from '@algonauti/ember-active-storage/services/active-storage';
 import { inject as service } from '@ember/service';
 
 export default class ActiveStorageService extends ActiveStorage {
