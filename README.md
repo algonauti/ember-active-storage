@@ -1,6 +1,7 @@
 # ember-active-storage
 
 [![CI](https://github.com/algonauti/ember-active-storage/workflows/CI/badge.svg)](https://github.com/algonauti/ember-active-storage/actions)
+[![Ember Observer Score](https://emberobserver.com/badges/-algonauti-ember-active-storage.svg)](https://emberobserver.com/addons/@algonauti/ember-active-storage)
 
 ## Installation
 
