@@ -1,6 +1,6 @@
 # ember-active-storage
 
-[![Build Status](https://travis-ci.org/algonauti/ember-active-storage.svg?branch=master)](https://travis-ci.org/algonauti/ember-active-storage)
+[![CI](https://github.com/algonauti/ember-active-storage/workflows/CI/badge.svg)](https://github.com/algonauti/ember-active-storage/actions)
 
 ## Installation
 
