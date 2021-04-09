@@ -10,12 +10,12 @@ import { tracked } from '@glimmer/tracking';
 import { later } from '@ember/runloop';
 
 export default class ActiveStorageService extends Service {
-  @tracked abort;
+  @tracked aborted;
 
   constructor() {
     super(...arguments);
 
-    this.abort = false;
+    this.aborted = false;
   }
 
   get _config() {
@@ -26,10 +26,10 @@ export default class ActiveStorageService extends Service {
   }
 
   abortAll() {
-    this.abort = true;
+    this.aborted = true;
 
     later(this, () => {
-      this.abort = false;
+      this.aborted = false;
     }, 3000); // wait 3 seconds and switch back to false
   }
 
@@ -61,7 +61,7 @@ export default class ActiveStorageService extends Service {
 
     return new EmberPromise((resolve, reject) => {
       Blob.build(file).then((blob) => {
-        uploader.upload(blob, url, this.abort, resolve, reject);
+        uploader.upload(blob, url, this.aborted, resolve, reject);
       });
     });
   }
