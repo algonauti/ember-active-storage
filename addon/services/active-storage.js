@@ -24,6 +24,10 @@ export default class ActiveStorageService extends Service {
     return config['ember-active-storage'] || {};
   }
 
+  abortAll() {
+    this.abort = true;
+  }
+
   upload(file, urlOrCallbacks, callbacks = {}) {
     let url;
 
