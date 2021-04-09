@@ -107,6 +107,33 @@ export default class ActiveStorageService extends ActiveStorage {
 
 Also note: if the download endpoint is protected as well, and you're using an ajax request to download files, then don't forget to include the same headers in that request as well.
 
+### Cancellation and readyness
+
+In case you need to cancel the whole upload process you can use the `abortAll` function of the service.
+Because of the nature of ember services are singleton objects, after the cancellation finished you need to mark the service `ready` again via calling `ready` function.
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @action
+  abortAll() {
+    this.activeStorage.abortAll();      
+  }
+
+  @action
+  ready() {
+    this.activeStorage.ready();      
+  }  
+}
+```
+
 ## Contributing
 
 ### Installation
