@@ -29,6 +29,9 @@ export default class FileUploadComponent extends Component {
           onProgress: (progress) => {
             progressBarFill.style = `width: ${progress}%`;
           },
+          onXHRCreated: (xhr) => {
+            console.log('xhr', xhr);
+          },
         })
         .then((blob) => {
           progressBarFill.style = `width: 100%`;

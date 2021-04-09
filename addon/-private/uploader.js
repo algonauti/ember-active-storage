@@ -36,6 +36,11 @@ export default class Uploader {
           checksum: blob.checksum,
         },
       }),
+      xhr: () => {
+        var xhr = new XMLHttpRequest();
+        this._addCreatedListener(xhr);
+        return xhr;
+      },
     });
   }
 
@@ -57,6 +62,7 @@ export default class Uploader {
       xhr: () => {
         var xhr = new XMLHttpRequest();
         this._addListeners(xhr);
+        this._addCreatedListener(xhr);
         xhr.upload.addEventListener('progress', (event) => {
           this._uploadRequestDidProgress(event);
         });
@@ -73,6 +79,12 @@ export default class Uploader {
         });
       }
     );
+  }
+
+  _addCreatedListener(xhr) {
+    xhr.addEventListener('XHRCreated', ({ detail }) => {
+      this.events['onXHRCreated']?.(detail);
+    });
   }
 
   _uploadRequestDidProgress(event) {
