@@ -37,6 +37,7 @@ export default function (url, options) {
       }
     };
 
+    xhr.onabort = () => reject(xhr.statusText);
     xhr.onerror = () => reject(xhr.statusText);
 
     xhr.send(options.data);
