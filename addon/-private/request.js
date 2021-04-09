@@ -29,8 +29,16 @@ export default function (url, options) {
         reject(xhr.statusText);
       }
     };
+
     xhr.onerror = () => reject(xhr.statusText);
 
-    xhr.send(options.data);
+    if (options.abort) {
+      if (xhr.readyState !== 0) {
+        xhr.abort();
+      }
+    }
+    else {
+      xhr.send(options.data);
+    }
   });
 }

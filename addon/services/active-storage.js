@@ -6,8 +6,17 @@ import Service from '@ember/service';
 import Uploader from '@algonauti/ember-active-storage/-private/uploader';
 import { assert } from '@ember/debug';
 import { getOwner } from '@ember/application';
+import { tracked } from '@glimmer/tracking';
 
 export default class ActiveStorageService extends Service {
+  @tracked abort;
+
+  constructor() {
+    super(...arguments);
+
+    this.abort = false;
+  }
+
   get _config() {
     const config =
       getOwner(this).resolveRegistration('config:environment') || {};
@@ -43,7 +52,7 @@ export default class ActiveStorageService extends Service {
 
     return new EmberPromise((resolve, reject) => {
       Blob.build(file).then((blob) => {
-        uploader.upload(blob, url, resolve, reject);
+        uploader.upload(blob, url, this.abort, resolve, reject);
       });
     });
   }

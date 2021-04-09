@@ -9,25 +9,26 @@ export default class Uploader {
     this.events = events;
   }
 
-  upload(blob, url, resolve, reject) {
-    this._uploadTask(blob, url)
+  upload(blob, url, abort, resolve, reject) {
+    this._uploadTask(blob, url, abort)
       .then((blob) => resolve(blob))
       .catch((error) => reject(error));
   }
 
-  async _uploadTask(blob, url) {
-    const response = await this._directUpload(blob, url);
+  async _uploadTask(blob, url, abort) {
+    const response = await this._directUpload(blob, url, abort);
     this._blobUpdate(blob, response);
-    await this._blobUpload(blob);
+    await this._blobUpload(blob, abort);
 
     return blob;
   }
 
-  _directUpload(blob, url) {
+  _directUpload(blob, url, abort) {
     return request(url, {
       method: 'POST',
       headers: this.headers,
       contentType: 'application/json; charset=utf-8',
+      abort,
       data: JSON.stringify({
         blob: {
           filename: blob.name,
@@ -48,12 +49,13 @@ export default class Uploader {
     });
   }
 
-  _blobUpload(blob) {
+  _blobUpload(blob, abort) {
     return request(blob.directUploadData.url, {
       method: 'PUT',
       headers: blob.directUploadData.headers,
       dataType: 'text',
       data: blob.slice(),
+      abort,
       xhr: () => {
         var xhr = new XMLHttpRequest();
         this._addListeners(xhr);
