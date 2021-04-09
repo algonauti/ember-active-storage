@@ -7,7 +7,6 @@ import Uploader from '@algonauti/ember-active-storage/-private/uploader';
 import { assert } from '@ember/debug';
 import { getOwner } from '@ember/application';
 import { tracked } from '@glimmer/tracking';
-import { later } from '@ember/runloop';
 
 export default class ActiveStorageService extends Service {
   @tracked aborted;
@@ -25,12 +24,12 @@ export default class ActiveStorageService extends Service {
     return config['ember-active-storage'] || {};
   }
 
+  ready() {
+    this.aborted = false;
+  }
+
   abortAll() {
     this.aborted = true;
-
-    later(this, () => {
-      this.aborted = false;
-    }, 3000); // wait 3 seconds and switch back to false
   }
 
   upload(file, urlOrCallbacks, callbacks = {}) {
