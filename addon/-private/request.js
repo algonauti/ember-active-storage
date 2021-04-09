@@ -36,8 +36,7 @@ export default function (url, options) {
       if (xhr.readyState !== 0) {
         xhr.abort();
       }
-    }
-    else {
+    } else {
       xhr.send(options.data);
     }
   });
