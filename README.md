@@ -151,7 +151,7 @@ export default class UploadComponent extends Component {
 }
 ```
 
-There is an `ember-active-storage` ENV config with only parameter called `url`. With this config help, you can omit the upload url now. For example:
+There is an `ember-active-storage` ENV config with only one parameter called `url`. With this config help, you can omit the upload url now. For example:
 
 ```javascript
 ENV['ember-active-storage'] = {
