@@ -1,10 +1,8 @@
 import { isPresent } from '@ember/utils';
 import { Promise } from 'rsvp';
 
-export default function (url, options) {
+export default function (xhr, url, options) {
   return new Promise((resolve, reject) => {
-    let xhr = options.xhr();
-
     xhr.open(options.method || 'GET', url);
 
     if (options.headers) {

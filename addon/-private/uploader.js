@@ -24,7 +24,10 @@ export default class Uploader {
   }
 
   _directUpload(blob, url) {
-    return request(url, {
+    const xhr = new XMLHttpRequest();
+    this._addCreatedListener(xhr);
+
+    return request(xhr, url, {
       method: 'POST',
       headers: this.headers,
       contentType: 'application/json; charset=utf-8',
@@ -36,11 +39,6 @@ export default class Uploader {
           checksum: blob.checksum,
         },
       }),
-      xhr: () => {
-        var xhr = new XMLHttpRequest();
-        this._addCreatedListener(xhr);
-        return xhr;
-      },
     });
   }
 
@@ -54,20 +52,18 @@ export default class Uploader {
   }
 
   _blobUpload(blob) {
-    return request(blob.directUploadData.url, {
+    const xhr = new XMLHttpRequest();
+    this._addListeners(xhr);
+    this._addCreatedListener(xhr);
+    xhr.upload.addEventListener('progress', (event) => {
+      this._uploadRequestDidProgress(event);
+    });
+
+    return request(xhr, blob.directUploadData.url, {
       method: 'PUT',
       headers: blob.directUploadData.headers,
       dataType: 'text',
       data: blob.slice(),
-      xhr: () => {
-        var xhr = new XMLHttpRequest();
-        this._addListeners(xhr);
-        this._addCreatedListener(xhr);
-        xhr.upload.addEventListener('progress', (event) => {
-          this._uploadRequestDidProgress(event);
-        });
-        return xhr;
-      },
     });
   }
 
