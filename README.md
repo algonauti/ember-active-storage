@@ -65,6 +65,137 @@ export default class UploadComponent extends Component {
 - The `uploadProgress` property will hold a value between 0 and 100 that you might use in your template to show upload progress.
 - After the `upload` promise is resolved and `signedId` is set in your model, when a `model.save()` is triggered, the Rails backend will use such `signedId` to associate an `ActiveStorage::Attachment` record to your backend model's record.
 
+---
+
+`loadstart`, `load`, `loadend`, `error`, `abort`, `timeout` events invokes `onLoadstart`, `onLoad`, `onLoadend`, `onError`, `onAbort`, `onTimeout` accordingly. For example; If you want to use the `loadend` event in your app, you can use like;
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            onProgress: (progress) => {
+              this.uploadProgress = progress;
+            },
+            onLoadend: (event) => {
+              debug(`Event captured ${event}`); // https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+If you need the actual `XHR object` in your app, you can use the `onXHRCreated` event. It returns the `XHR object` reference. For example:
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            onProgress: (progress) => {
+              this.uploadProgress = progress;
+            },
+            onXHRCreated: (xhr) => {
+              xhr.abort(); // You can abort the upload process here
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+There is an `ember-active-storage` ENV config with only one parameter called `url`. With this config help, you can omit the upload url now. For example:
+
+```javascript
+ENV['ember-active-storage'] = {
+  url: 'http://your-domain/rails/active_storage/direct_uploads',
+};
+```
+
+Now you can call the upload function without the upload url.
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), {
+            onProgress: (progress) => {
+              this.uploadProgress = progress;
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
 ### Sending authentication headers
 
 It's pretty common that you want to protect with authentication the direct uploads endpoint on your Rails backend. If that's the case, the `activeStorage` service will need to send authentication headers together with the direct upload request.

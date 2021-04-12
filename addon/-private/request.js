@@ -1,10 +1,8 @@
 import { isPresent } from '@ember/utils';
 import { Promise } from 'rsvp';
 
-export default function (url, options) {
+export default function (xhr, url, options) {
   return new Promise((resolve, reject) => {
-    let xhr = options.xhr ? options.xhr() : new XMLHttpRequest();
-
     xhr.open(options.method || 'GET', url);
 
     if (options.headers) {
@@ -12,9 +10,16 @@ export default function (url, options) {
         xhr.setRequestHeader(key, options.headers[key]);
       });
     }
+
     if (options.contentType) {
       xhr.setRequestHeader('Content-Type', options.contentType);
     }
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 1) {
+        xhr.dispatchEvent(new CustomEvent('XHRCreated', { detail: xhr }));
+      }
+    };
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
@@ -29,6 +34,8 @@ export default function (url, options) {
         reject(xhr.statusText);
       }
     };
+
+    xhr.onabort = () => reject(xhr.statusText);
     xhr.onerror = () => reject(xhr.statusText);
 
     xhr.send(options.data);
