@@ -15,10 +15,8 @@ export default function (xhr, url, options) {
       xhr.setRequestHeader('Content-Type', options.contentType);
     }
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 1) {
-        xhr.dispatchEvent(new CustomEvent('XHRCreated', { detail: xhr }));
-      }
+    xhr.onloadstart = () => {
+      xhr.dispatchEvent(new CustomEvent('XHRCreated', { detail: xhr }));
     };
 
     xhr.onload = () => {
