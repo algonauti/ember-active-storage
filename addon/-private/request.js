@@ -15,11 +15,7 @@ export default function (xhr, url, options) {
       xhr.setRequestHeader('Content-Type', options.contentType);
     }
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === 1) {
-        xhr.dispatchEvent(new CustomEvent('XHRCreated', { detail: xhr }));
-      }
-    };
+    xhr.dispatchEvent(new CustomEvent('XHROpened', { detail: xhr }));
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
