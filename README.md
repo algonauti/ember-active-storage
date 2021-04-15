@@ -123,6 +123,9 @@ export default class UploadComponent extends Component {
 
   @tracked
   uploadProgress = 0;
+  
+  @tracked
+  xhrs = [];
 
   @action
   upload(event) {
@@ -137,7 +140,7 @@ export default class UploadComponent extends Component {
               this.uploadProgress = progress;
             },
             onXHROpened: (xhr) => {
-              xhr.abort(); // You can abort the upload process here
+              this.xhrs.push(xhr);  // so you can loop over this.xhrs and invoke abort()
             },
           })
           .then((blob) => {
