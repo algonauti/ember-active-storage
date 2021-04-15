@@ -109,7 +109,7 @@ export default class UploadComponent extends Component {
 }
 ```
 
-If you need the actual `XHR object` in your app, you can use the `onXHRCreated` event. It returns the `XHR object` reference. For example:
+If you need the actual `XHR object` in your app, you can use the `onXHROpened` event. It returns the `XHR object` reference. For example:
 
 ```javascript
 import Component from '@glimmer/component';
@@ -123,6 +123,9 @@ export default class UploadComponent extends Component {
 
   @tracked
   uploadProgress = 0;
+  
+  @tracked
+  xhrs = [];
 
   @action
   upload(event) {
@@ -136,8 +139,8 @@ export default class UploadComponent extends Component {
             onProgress: (progress) => {
               this.uploadProgress = progress;
             },
-            onXHRCreated: (xhr) => {
-              xhr.abort(); // You can abort the upload process here
+            onXHROpened: (xhr) => {
+              this.xhrs.push(xhr);  // so you can loop over this.xhrs and invoke abort()
             },
           })
           .then((blob) => {

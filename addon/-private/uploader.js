@@ -78,8 +78,8 @@ export default class Uploader {
   }
 
   _addCreatedListener(xhr) {
-    xhr.addEventListener('XHRCreated', ({ detail }) => {
-      this.events['onXHRCreated']?.(detail);
+    xhr.addEventListener('XHROpened', ({ detail }) => {
+      this.events['onXHROpened']?.(detail);
     });
   }
 

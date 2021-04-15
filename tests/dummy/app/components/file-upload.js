@@ -29,7 +29,7 @@ export default class FileUploadComponent extends Component {
           onProgress: (progress) => {
             progressBarFill.style = `width: ${progress}%`;
           },
-          onXHRCreated: (xhr) => {
+          onXHROpened: (xhr) => {
             debug(`XHR created ${xhr}`);
           },
         })
