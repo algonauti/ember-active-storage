@@ -123,7 +123,7 @@ export default class UploadComponent extends Component {
 
   @tracked
   uploadProgress = 0;
-  
+
   @tracked
   xhrs = [];
 
