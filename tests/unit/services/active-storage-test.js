@@ -48,7 +48,7 @@ module('Unit | Service | active-storage', function (hooks) {
   test('upload() invokes onLoadstart callback', async function (assert) {
     await service.upload(file, '/api/attachments/upload', {
       onLoadstart: (event) => {
-        assert.ok(event.type === 'loadstart');
+        assert.strictEqual(event.type, 'loadstart');
       },
     });
   });
@@ -56,7 +56,7 @@ module('Unit | Service | active-storage', function (hooks) {
   test('upload() invokes onLoad callback', async function (assert) {
     await service.upload(file, '/api/attachments/upload', {
       onLoad: (event) => {
-        assert.ok(event.type === 'load');
+        assert.strictEqual(event.type, 'load');
       },
     });
   });
@@ -64,7 +64,7 @@ module('Unit | Service | active-storage', function (hooks) {
   test('upload() invokes onLoadend callback', async function (assert) {
     await service.upload(file, '/api/attachments/upload', {
       onLoadend: (event) => {
-        assert.ok(event.type === 'loadend');
+        assert.strictEqual(event.type, 'loadend');
       },
     });
   });
@@ -84,7 +84,7 @@ module('Unit | Service | active-storage', function (hooks) {
   test('upload() invokes onLoadstart callback without upload url', async function (assert) {
     await service.upload(file, {
       onLoadstart: (event) => {
-        assert.ok(event.type === 'loadstart');
+        assert.strictEqual(event.type, 'loadstart');
       },
     });
   });
@@ -92,7 +92,7 @@ module('Unit | Service | active-storage', function (hooks) {
   test('upload() invokes onLoad callback without upload url', async function (assert) {
     await service.upload(file, {
       onLoad: (event) => {
-        assert.ok(event.type === 'load');
+        assert.strictEqual(event.type, 'load');
       },
     });
   });
@@ -100,7 +100,7 @@ module('Unit | Service | active-storage', function (hooks) {
   test('upload() invokes onLoadend callback without upload url', async function (assert) {
     await service.upload(file, {
       onLoadend: (event) => {
-        assert.ok(event.type === 'loadend');
+        assert.strictEqual(event.type, 'loadend');
       },
     });
   });
