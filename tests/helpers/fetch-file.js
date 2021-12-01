@@ -13,6 +13,6 @@ export default async function fetchFile(filePath) {
   window.pretenderFetch = window.fetch;
   window.fetch = window.server.pretender._nativefetch;
   var res = await _fetchFile(filePath);
-  window.fetch = window.pretenderFetch
+  window.fetch = window.pretenderFetch;
   return res;
 }
