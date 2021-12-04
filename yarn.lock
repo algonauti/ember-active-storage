@@ -1280,7 +1280,7 @@
     mkdirp "^1.0.4"
     silent-error "^1.1.1"
 
-"@ember/test-helpers@^2.4.3":
+"@ember/test-helpers@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@ember/test-helpers/-/test-helpers-2.6.0.tgz#d687515c6ab49ba72717fc62046970ef4a72ea9c"
   integrity sha512-N5sr3layWk60wB3maCy+/5hFHQRcTh8aqxcZTSs3Od9QkuHdWBtRgMGLP/35mXpJlgWuu3xqLpt6u3dGHc8gCg==
@@ -1381,10 +1381,10 @@
     semver "^7.3.2"
     typescript-memoize "^1.0.0-alpha.3"
 
-"@embroider/test-setup@^0.43.5":
-  version "0.43.5"
-  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-0.43.5.tgz#79944cb50038802cc71d50aa0d5d7a0955ee6349"
-  integrity sha512-ke+5B0VR2343ZrOqV9Ok2LyA4m2q2ApM1Oy1RC8+3+OI5lDVg8UgZG9n/G2e77KPMFxnK3eVpXcPdLcdOxW6+w==
+"@embroider/test-setup@^0.47.2":
+  version "0.47.2"
+  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-0.47.2.tgz#acf3fa6a38fa97ff577be49df44d6ab30e2dc054"
+  integrity sha512-zTiNaicOeBJWQ+uAJOEg4Z4plmvF2Ckze+tMZ0sycp2o09UV72WC8s9L3pssWOGgHMV6Kl+eCfFQelWwUOqz1Q==
   dependencies:
     lodash "^4.17.21"
     resolve "^1.20.0"
@@ -5739,7 +5739,7 @@ ember-source@~3.28.8:
     semver "^7.3.4"
     silent-error "^1.1.1"
 
-ember-template-lint@^3.6.0:
+ember-template-lint@^3.14.0:
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-3.14.0.tgz#4e7ac709979b229612cab66e8258cf175eefaca2"
   integrity sha512-0elxAseSft1SjQFcwqYddCXcsBW783M8TBXQ/eGXBzWTZVFwh/Oe+13SggVeUoyr9ZUX9ngW6rFEsKIyofY0KA==
@@ -10196,7 +10196,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.3.2:
+prettier@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.0.tgz#a6370e2d4594e093270419d9cc47f7670488f893"
   integrity sha512-FM/zAKgWTxj40rH03VxzIPdXmj39SwSjwG0heUcNFwI+EMZJnY93yAiKXM3dObIKAM5TA88werc8T/EwhB45eg==
@@ -10383,7 +10383,7 @@ qunit-dom@^1.6.0:
     ember-cli-babel "^7.23.0"
     ember-cli-version-checker "^5.1.1"
 
-qunit@^2.16.0:
+qunit@^2.17.2:
   version "2.17.2"
   resolved "https://registry.yarnpkg.com/qunit/-/qunit-2.17.2.tgz#5cb278e131d931f25c109a0fdb0518be7754c25a"
   integrity sha512-17isVvuOmALzsPjiV7wFg/6O5vJYXBrQZPwocfQSSh0I/rXvfX7bKMFJ4GMVW3U4P8r2mBeUy8EAngti4QD2Vw==
