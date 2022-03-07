@@ -87,7 +87,7 @@ export default class Uploader {
     const progress = Math.ceil((event.loaded / event.total) * 100);
 
     if (progress) {
-      run(() => this.events.onProgress?.(progress));
+      run(() => this.events.onProgress?.(progress, event));
     }
   }
 

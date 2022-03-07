@@ -15,8 +15,6 @@ export default function (xhr, url, options) {
       xhr.setRequestHeader('Content-Type', options.contentType);
     }
 
-    xhr.dispatchEvent(new CustomEvent('XHROpened', { detail: xhr }));
-
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         let response;
@@ -35,5 +33,7 @@ export default function (xhr, url, options) {
     xhr.onerror = () => reject(xhr.statusText);
 
     xhr.send(options.data);
+
+    xhr.dispatchEvent(new CustomEvent('XHROpened', { detail: xhr }));
   });
 }

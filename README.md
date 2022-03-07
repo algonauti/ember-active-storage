@@ -46,7 +46,7 @@ export default class UploadComponent extends Component {
       for (var i = 0; i < files.length; i++) {
         this.activeStorage
           .upload(files.item(i), directUploadURL, {
-            onProgress: (progress) => {
+            onProgress: (progress, event) => {
               this.uploadProgress = progress;
             },
           })
@@ -91,7 +91,7 @@ export default class UploadComponent extends Component {
       for (var i = 0; i < files.length; i++) {
         this.activeStorage
           .upload(files.item(i), directUploadURL, {
-            onProgress: (progress) => {
+            onProgress: (progress, event) => {
               this.uploadProgress = progress;
             },
             onLoadend: (event) => {
@@ -136,7 +136,7 @@ export default class UploadComponent extends Component {
       for (var i = 0; i < files.length; i++) {
         this.activeStorage
           .upload(files.item(i), directUploadURL, {
-            onProgress: (progress) => {
+            onProgress: (progress, event) => {
               this.uploadProgress = progress;
             },
             onXHROpened: (xhr) => {
@@ -184,7 +184,7 @@ export default class UploadComponent extends Component {
       for (var i = 0; i < files.length; i++) {
         this.activeStorage
           .upload(files.item(i), {
-            onProgress: (progress) => {
+            onProgress: (progress, event) => {
               this.uploadProgress = progress;
             },
           })
