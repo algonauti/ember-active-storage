@@ -4,8 +4,9 @@ import { run } from '@ember/runloop';
 import { setProperties } from '@ember/object';
 
 export default class Uploader {
-  constructor({ headers, ...events }) {
+  constructor({ headers, metadata, ...events }) {
     this.headers = headers;
+    this.metadata = metadata;
     this.events = events;
   }
 
@@ -37,6 +38,7 @@ export default class Uploader {
           content_type: blob.type,
           byte_size: blob.size,
           checksum: blob.checksum,
+          metadata: this.metadata,
         },
       }),
     });

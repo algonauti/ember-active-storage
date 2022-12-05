@@ -15,7 +15,7 @@ export default class ActiveStorageService extends Service {
     return config['ember-active-storage'] || {};
   }
 
-  upload(file, urlOrCallbacks, callbacks = {}) {
+  upload(file, urlOrCallbacks, callbacks = {}, metadata = {}) {
     let url;
 
     if (isPresent(urlOrCallbacks)) {
@@ -39,7 +39,11 @@ export default class ActiveStorageService extends Service {
       url = this._config['url'];
     }
 
-    const uploader = new Uploader({ headers: this.headers, ...callbacks });
+    const uploader = new Uploader({
+      headers: this.headers,
+      metadata: metadata,
+      ...callbacks
+    });
 
     return new EmberPromise((resolve, reject) => {
       Blob.build(file).then((blob) => {
