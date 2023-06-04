@@ -15,19 +15,19 @@ export default class ActiveStorageService extends Service {
     return config['ember-active-storage'] || {};
   }
 
-  upload(file, urlOrCallbacks, callbacks = {}, metadata = {}) {
+  upload(file, urlOrOptions, options = {}) {
     let url;
 
-    if (isPresent(urlOrCallbacks)) {
-      if (typeOf(urlOrCallbacks) == 'string') {
-        url = urlOrCallbacks;
-      } else if (typeOf(urlOrCallbacks) == 'object') {
+    if (isPresent(urlOrOptions)) {
+      if (typeOf(urlOrOptions) == 'string') {
+        url = urlOrOptions;
+      } else if (typeOf(urlOrOptions) == 'object') {
         assert(
           "If not explicitly passed, URL must be set on ENV['ember-active-storage'] = { url: '...' }",
           isPresent(this._config['url'])
         );
 
-        callbacks = urlOrCallbacks;
+        options = urlOrOptions;
         url = this._config['url'];
       }
     } else {
@@ -38,6 +38,8 @@ export default class ActiveStorageService extends Service {
 
       url = this._config['url'];
     }
+
+    let { metadata, ...callbacks } = options;
 
     const uploader = new Uploader({
       headers: this.headers,
