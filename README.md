@@ -65,7 +65,8 @@ export default class UploadComponent extends Component {
 - The `uploadProgress` property will hold a value between 0 and 100 that you might use in your template to show upload progress.
 - After the `upload` promise is resolved and `signedId` is set in your model, when a `model.save()` is triggered, the Rails backend will use such `signedId` to associate an `ActiveStorage::Attachment` record to your backend model's record.
 
----
+
+### Events
 
 `loadstart`, `load`, `loadend`, `error`, `abort`, `timeout` events invokes `onLoadstart`, `onLoad`, `onLoadend`, `onError`, `onAbort`, `onTimeout` accordingly. For example; If you want to use the `loadend` event in your app, you can use like;
 
@@ -109,6 +110,9 @@ export default class UploadComponent extends Component {
 }
 ```
 
+
+### XHR object
+
 If you need the actual `XHR object` in your app, you can use the `onXHROpened` event. It returns the `XHR object` reference. For example:
 
 ```javascript
@@ -123,7 +127,7 @@ export default class UploadComponent extends Component {
 
   @tracked
   uploadProgress = 0;
-  
+
   @tracked
   xhrs = [];
 
@@ -153,6 +157,58 @@ export default class UploadComponent extends Component {
   }
 }
 ```
+
+
+### Metadata
+
+ActiveStorage supports metadata for direct uploads. That is a nice way to provide extra information to the rails app.
+
+```ruby
+class DirectUploadsController < ActiveStorage::DirectUploadsController
+  def create
+    # blob_args[:metadata]['additional_type']
+    # => my_type
+    blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_args)
+    render json: direct_upload_json(blob)
+  end
+end
+```
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            metadata: {
+              additional_type: 'my_type'
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+
+### Configuration
 
 There is an `ember-active-storage` ENV config with only one parameter called `url`. With this config help, you can omit the upload url now. For example:
 
