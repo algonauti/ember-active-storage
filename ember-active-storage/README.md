@@ -1,0 +1,356 @@
+# ember-active-storage
+
+[![CI](https://github.com/algonauti/ember-active-storage/workflows/CI/badge.svg)](https://github.com/algonauti/ember-active-storage/actions)
+[![Ember Observer Score](https://emberobserver.com/badges/-algonauti-ember-active-storage.svg)](https://emberobserver.com/addons/@algonauti/ember-active-storage)
+
+## Installation
+
+```
+ember install @algonauti/ember-active-storage
+```
+
+## Usage
+
+The addon provides an `activeStorage` service that allows you to:
+
+- send files to your Rails backend's direct upload controller;
+- listen to upload progress events.
+
+Assuming your template has a file input like:
+
+```hbs
+<input type="file" {{on "change" (fn this.upload)}} />
+```
+
+and your ember model has an `avatar` attribute defined as `has_one_attached :avatar` on its corresponding Active Record model, then in your component (or controller) the `upload` action would look like:
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            onProgress: (progress, event) => {
+              this.uploadProgress = progress;
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+- `directUploadURL` is the path referencing `ActiveStorage::DirectUploadsController` on your Rails backend (or a custom one built on top of that).
+- The `uploadProgress` property will hold a value between 0 and 100 that you might use in your template to show upload progress.
+- After the `upload` promise is resolved and `signedId` is set in your model, when a `model.save()` is triggered, the Rails backend will use such `signedId` to associate an `ActiveStorage::Attachment` record to your backend model's record.
+
+
+### Events
+
+`loadstart`, `load`, `loadend`, `error`, `abort`, `timeout` events invokes `onLoadstart`, `onLoad`, `onLoadend`, `onError`, `onAbort`, `onTimeout` accordingly. For example; If you want to use the `loadend` event in your app, you can use like;
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            onProgress: (progress, event) => {
+              this.uploadProgress = progress;
+            },
+            onLoadend: (event) => {
+              debug(`Event captured ${event}`); // https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+
+### XHR object
+
+If you need the actual `XHR object` in your app, you can use the `onXHROpened` event. It returns the `XHR object` reference. For example:
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @tracked
+  xhrs = [];
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            onProgress: (progress, event) => {
+              this.uploadProgress = progress;
+            },
+            onXHROpened: (xhr) => {
+              this.xhrs.push(xhr);  // so you can loop over this.xhrs and invoke abort()
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+
+### Metadata
+
+ActiveStorage supports metadata for direct uploads. That is a nice way to provide extra information to the rails app.
+
+```ruby
+class DirectUploadsController < ActiveStorage::DirectUploadsController
+  def create
+    # blob_args[:metadata]['additional_type']
+    # => my_type
+    blob = ActiveStorage::Blob.create_before_direct_upload!(**blob_args)
+    render json: direct_upload_json(blob)
+  end
+end
+```
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      const directUploadURL = '/rails/active_storage/direct_uploads';
+
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), directUploadURL, {
+            metadata: {
+              additional_type: 'my_type'
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+
+### Configuration
+
+There is an `ember-active-storage` ENV config with only one parameter called `url`. With this config help, you can omit the upload url now. For example:
+
+```javascript
+ENV['ember-active-storage'] = {
+  url: 'http://your-domain/rails/active_storage/direct_uploads',
+};
+```
+
+Now you can call the upload function without the upload url.
+
+```javascript
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+
+export default class UploadComponent extends Component {
+  @service
+  activeStorage;
+
+  @tracked
+  uploadProgress = 0;
+
+  @action
+  upload(event) {
+    const files = event.target.files;
+    if (files) {
+      for (var i = 0; i < files.length; i++) {
+        this.activeStorage
+          .upload(files.item(i), {
+            onProgress: (progress, event) => {
+              this.uploadProgress = progress;
+            },
+          })
+          .then((blob) => {
+            const signedId = blob.signedId;
+
+            this.model.avatar = signedId;
+          });
+      }
+    }
+  }
+}
+```
+
+### Sending authentication headers
+
+It's pretty common that you want to protect with authentication the direct uploads endpoint on your Rails backend. If that's the case, the `activeStorage` service will need to send authentication headers together with the direct upload request.
+
+To achieve that, you'll need to extend the `activeStorage` service provided by the addon and add a `headers` computed property. For example, if you're using [ember-simple-auth](/simplabs/ember-simple-auth), it will be a 2-steps process. First you'll need to define an `authenticatedHeaders` computed property in your `session` service, like this:
+
+```javascript
+// app/services/session.js
+import Service from '@ember/service';
+import { inject as service } from '@ember/service';
+
+export default class MySessionService extends Service {
+  @service
+  session;
+
+  get authenticatedHeaders() {
+    const { access_token } = this.session.authenticated;
+
+    return { Authorization: `Bearer ${access_token}` };
+  }
+}
+```
+
+Then, you will alias that property in your `activeStorage` service, like this:
+
+```javascript
+// app/services/active-storage.js
+import ActiveStorage from '@algonauti/ember-active-storage/services/active-storage';
+import { inject as service } from '@ember/service';
+
+export default class ActiveStorageService extends ActiveStorage {
+  @service('my-session')
+  session;
+
+  get headers() {
+    this.session.authenticatedHeaders;
+  }
+}
+```
+
+Also note: if the download endpoint is protected as well, and you're using an ajax request to download files, then don't forget to include the same headers in that request as well.
+
+## TypeScript
+
+The addon is written in TypeScript and ships its own type declarations.
+
+```ts
+import Component from '@glimmer/component';
+import { service } from '@ember/service';
+import type { ActiveStorageService, UploadOptions } from '@algonauti/ember-active-storage';
+
+export default class UploadComponent extends Component {
+  @service declare activeStorage: ActiveStorageService;
+
+  upload = async (event: Event) => {
+    const file = (event.target as HTMLInputElement).files?.[0];
+
+    if (file) {
+      const options: UploadOptions = {
+        onProgress: (progress) => console.log(progress),
+      };
+      const blob = await this.activeStorage.upload(file, '/rails/active_storage/direct_uploads', options);
+
+      console.log(blob.signedId);
+    }
+  };
+}
+```
+
+Exported types: `ActiveStorageConfig`, `DirectUploadData`, `DirectUploadResponse`, `Headers`, `RequestOptions`, `UploadEventHandlers`, `UploadOptions`, `UploadResponse` and `UploadResponseOptions`. `ActiveStorageService`, `Blob`, `FileChecksum`, `Uploader` and the `uploadResponse` test helper are exported as well.
+
+## Contributing
+
+### Installation
+
+- `git clone <repository-url>`
+- `cd ember-active-storage`
+- `pnpm install`
+
+### Linting
+
+- `pnpm lint`
+- `pnpm lint:fix`
+
+### Running tests
+
+- `pnpm test` – Runs the test suite on the current Ember version
+- `cd test-app && ember try:each` – Runs the test suite against multiple Ember versions
+
+### Running the test app
+
+- `pnpm start`
+- Visit the test app at [http://localhost:4200](http://localhost:4200).
+
+For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.md).
