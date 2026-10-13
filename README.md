@@ -28,7 +28,7 @@ and your ember model has an `avatar` attribute defined as `has_one_attached :ava
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -74,7 +74,7 @@ export default class UploadComponent extends Component {
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -119,7 +119,7 @@ If you need the actual `XHR object` in your app, you can use the `onXHROpened` e
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -177,7 +177,7 @@ end
 ```javascript
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -224,7 +224,7 @@ Now you can call the upload function without the upload url.
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -264,7 +264,7 @@ To achieve that, you'll need to extend the `activeStorage` service provided by t
 ```javascript
 // app/services/session.js
 import Service from '@ember/service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class MySessionService extends Service {
   @service
@@ -283,7 +283,7 @@ Then, you will alias that property in your `activeStorage` service, like this:
 ```javascript
 // app/services/active-storage.js
 import ActiveStorage from '@algonauti/ember-active-storage/services/active-storage';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class ActiveStorageService extends ActiveStorage {
   @service('my-session')
@@ -297,29 +297,57 @@ export default class ActiveStorageService extends ActiveStorage {
 
 Also note: if the download endpoint is protected as well, and you're using an ajax request to download files, then don't forget to include the same headers in that request as well.
 
+## TypeScript
+
+The addon is written in TypeScript and ships its own type declarations.
+
+```ts
+import Component from '@glimmer/component';
+import { service } from '@ember/service';
+import type { ActiveStorageService, UploadOptions } from '@algonauti/ember-active-storage';
+
+export default class UploadComponent extends Component {
+  @service declare activeStorage: ActiveStorageService;
+
+  upload = async (event: Event) => {
+    const file = (event.target as HTMLInputElement).files?.[0];
+
+    if (file) {
+      const options: UploadOptions = {
+        onProgress: (progress) => console.log(progress),
+      };
+      const blob = await this.activeStorage.upload(file, '/rails/active_storage/direct_uploads', options);
+
+      console.log(blob.signedId);
+    }
+  };
+}
+```
+
+Exported types: `ActiveStorageConfig`, `DirectUploadData`, `DirectUploadResponse`, `Headers`, `RequestOptions`, `UploadEventHandlers`, `UploadOptions`, `UploadResponse` and `UploadResponseOptions`. `ActiveStorageService`, `Blob`, `FileChecksum`, `Uploader` and the `uploadResponse` test helper are exported as well.
+
 ## Contributing
 
 ### Installation
 
 - `git clone <repository-url>`
 - `cd ember-active-storage`
-- `yarn install`
+- `pnpm install`
 
 ### Linting
 
-- `yarn lint:js`
-- `yarn lint:js --fix`
+- `pnpm lint`
+- `pnpm lint:fix`
 
 ### Running tests
 
-- `ember test` – Runs the test suite on the current Ember version
-- `ember test --server` – Runs the test suite in "watch mode"
-- `yarn test` – Runs `ember try:each` to test your addon against multiple Ember versions
+- `pnpm test` – Runs the test suite on the current Ember version
+- `cd test-app && ember try:each` – Runs the test suite against multiple Ember versions
 
-### Running the dummy application
+### Running the test app
 
-- `ember serve`
-- Visit the dummy application at [http://localhost:4200](http://localhost:4200).
+- `pnpm start`
+- Visit the test app at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
