@@ -1,0 +1,19 @@
+<input
+  accept="image/png,image/jpeg,application/pdf"
+  id="file"
+  multiple="false"
+  type="file"
+  {{on "change" this.setFileNameAndUpload}}
+/>
+
+<label for="file">Choose files</label>
+
+<div class="progress-bar-wrapper">
+  <div class="progress-bar">
+    <span class="progress-bar-fill"></span>
+  </div>
+</div>
+
+<span class="filename">
+  {{this.fileName}}
+</span>

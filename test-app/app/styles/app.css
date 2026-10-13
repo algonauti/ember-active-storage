@@ -1,0 +1,93 @@
+body {
+  background: blue;
+  font-family: serif;
+  font-size: 16px;
+  line-height: 1.3;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.wrapper {
+  background-color: #fff;
+  border-radius: 1rem;
+  margin: 40px auto 0;
+  max-width: 500px;
+  padding: 2rem;
+  width: 100%;
+}
+
+.footer {
+  font-size: 0.8rem;
+  margin-bottom: 0;
+  margin-top: 3rem;
+}
+
+h1,
+p {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-family: sans-serif;
+  font-size: 1.7rem;
+}
+
+a {
+  color: #31c1ef;
+  text-decoration: none;
+}
+
+[type="file"] {
+  height: 0;
+  overflow: hidden;
+  width: 0;
+}
+
+[type="file"] + label {
+  background: #f15d22;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Poppins, sans-serif;
+  font-size: inherit;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 50px;
+  position: relative;
+  transition: all 0.3s;
+  vertical-align: middle;
+}
+
+[type="file"] + label:hover {
+  background-color: #d3460d;
+}
+
+.progress-bar-wrapper {
+  margin-top: 30px;
+  width: 500px;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 20%);
+  padding: 3px;
+  width: 100%;
+}
+
+.progress-bar-fill {
+  background-color: #000;
+  border-radius: 3px;
+  display: block;
+  height: 22px;
+  transition: width 500ms ease-in-out;
+  width: 0;
+}
+
+.filename {
+  display: block;
+  margin-top: 10px;
+}
