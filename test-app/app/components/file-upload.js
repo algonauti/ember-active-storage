@@ -1,6 +1,6 @@
 import { debug } from '@ember/debug';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { isPresent } from '@ember/utils';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
@@ -29,20 +29,20 @@ export default class FileUploadComponent extends Component {
   upload(e) {
     const files = e.target.files;
     const progressBarFill = document.querySelector('.progress-bar-fill');
-    progressBarFill.style = `width: 0%`;
+    progressBarFill.style.width = `0%`;
 
     if (isPresent(files)) {
       this.activeStorage
         .upload(files[0], '/api/attachments/upload', {
           onProgress: (progress) => {
-            progressBarFill.style = `width: ${progress}%`;
+            progressBarFill.style.width = `${progress}%`;
           },
           onXHROpened: (xhr) => {
             debug(`XHR created ${xhr}`);
           },
         })
         .then((blob) => {
-          progressBarFill.style = `width: 100%`;
+          progressBarFill.style.width = `100%`;
           debug(`file upload completed ${blob.signedId}`);
         });
     }

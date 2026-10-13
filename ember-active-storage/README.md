@@ -28,7 +28,7 @@ and your ember model has an `avatar` attribute defined as `has_one_attached :ava
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -74,7 +74,7 @@ export default class UploadComponent extends Component {
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -119,7 +119,7 @@ If you need the actual `XHR object` in your app, you can use the `onXHROpened` e
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -177,7 +177,7 @@ end
 ```javascript
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -224,7 +224,7 @@ Now you can call the upload function without the upload url.
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class UploadComponent extends Component {
   @service
@@ -264,7 +264,7 @@ To achieve that, you'll need to extend the `activeStorage` service provided by t
 ```javascript
 // app/services/session.js
 import Service from '@ember/service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class MySessionService extends Service {
   @service
@@ -283,7 +283,7 @@ Then, you will alias that property in your `activeStorage` service, like this:
 ```javascript
 // app/services/active-storage.js
 import ActiveStorage from '@algonauti/ember-active-storage/services/active-storage';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class ActiveStorageService extends ActiveStorage {
   @service('my-session')
